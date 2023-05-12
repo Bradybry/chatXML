@@ -96,7 +96,7 @@ class LanguageExpert:
             "model_params": self.model_params
         }
 
-    def get_content(self):  
+    def get_content(self):
         """Returns the expert definition in an fake XML format.
 
         Returns:
@@ -105,8 +105,7 @@ class LanguageExpert:
         example_output = self.example_output
         example_input = self.example_input
         content = f'<assistant_definition><name>{self.name}</name><role>{self.description}</role><system_message>{self.system_message}</system_message><example_input>{example_input}</example_input><example_output>{example_output}</example_ouput></assistant_definition>'
-        content  = SystemMessage(content=content)
-        return content
+        return SystemMessage(content=content)
     
     def generate(self, message): 
         """Generates a response to the input message. 
@@ -323,24 +322,21 @@ def parse_assistant_definition(markdown_text):
     system_message_pattern = re.compile(r'<system_message>(.*?)<\/system_message>', re.DOTALL)
     example_input_pattern = re.compile(r'<example_input>(.*?)<\/example_input>', re.DOTALL)
     example_output_pattern = re.compile(r'<example_output>(.*?)<\/example_output>', re.DOTALL)
-    
+
     # Extract the role (as name), system_message, example_input, and example_output from the markdown text
-    name = name_pattern.search(markdown_text).group(1).strip()
-    role = role_pattern.search(markdown_text).group(1).strip()
-    system_message = system_message_pattern.search(markdown_text).group(1).strip()
-    example_input = example_input_pattern.search(markdown_text).group(1).strip()
-    example_output = example_output_pattern.search(markdown_text).group(1).strip()
-    
-    # Create a dictionary with the extracted information, using key names matching the original JSON-like dictionary
-    assistant_definition = {
+    name = name_pattern.search(markdown_text)[1].strip()
+    role = role_pattern.search(markdown_text)[1].strip()
+    system_message = system_message_pattern.search(markdown_text)[1].strip()
+    example_input = example_input_pattern.search(markdown_text)[1].strip()
+    example_output = example_output_pattern.search(markdown_text)[1].strip()
+
+    return {
         'name': name,
         'description': role,
         'system_message': system_message,
         'example_input': example_input,
-        'example_output': example_output
+        'example_output': example_output,
     }
-    
-    return assistant_definition
 
 def gen_prompt(manager):
     """Generates a prompt for an AI assistant and adds it to the manager.
